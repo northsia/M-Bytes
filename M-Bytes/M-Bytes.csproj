@@ -99,6 +99,7 @@
     <Compile Include="api\API.cs" />
     <Compile Include="api\Ed25519.cs" />
     <Compile Include="Core\Account\user_data.cs" />
+    <Compile Include="Core\EngineCL\CheckNetwork.cs" />
     <Compile Include="Core\EngineCL\EngineCL.cs" />
     <Compile Include="Core\Messages\info.cs">
       <SubType>Form</SubType>

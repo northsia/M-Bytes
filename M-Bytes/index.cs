@@ -1,5 +1,6 @@
 ﻿using KeyAuth;
 using M_Bytes.Core.Account;
+using M_Bytes.Core.EngineCL;
 using M_Bytes.Core.Messages;
 using Microsoft.Win32.SafeHandles;
 using System;
@@ -50,6 +51,7 @@ namespace M_Bytes
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            CheckNetwork.CheckConnection();
             KeyAuthApp.init();
             EnableDarkMode();
 

@@ -14,6 +14,7 @@ using System.Net.Security;
 using System.Threading;
 using System.Runtime.InteropServices;
 using Cryptographic;
+using M_Bytes.Core.Messages;
 
 namespace KeyAuth
 {
@@ -1147,14 +1148,11 @@ namespace KeyAuth
                 switch (response.StatusCode)
                 {
                     case (HttpStatusCode)429: // client hit our rate limit
-                        error("You're connecting too fast to loader, slow down.");
-                        LogEvent("You're connecting too fast to loader, slow down.");
-                        TerminateProcess(GetCurrentProcess(), 1);
+                        MSG.SH("Connection Error", "Check Your Network & Try Again.");
                         return "";
                     default: // site won't resolve. you should use keyauth.uk domain since it's not blocked by any ISPs
-                        error("Connection failure. Please try again, or contact us for help.");
+                        MSG.SH("Connection Error", "Check Your Network & Try Again.");
                         LogEvent("Connection failure. Please try again, or contact us for help.");
-                        TerminateProcess(GetCurrentProcess(), 1);
                         return "";
                 }
             }
