@@ -21,7 +21,6 @@ namespace M_Bytes
             }
 
 
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new index());

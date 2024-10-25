@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -18,8 +19,9 @@ namespace M_Bytes
     public partial class index : Form
     {
 
-        string user;
-        string password;
+        public static string user;
+        public static string password;
+        string api_user;
 
 
         public static api KeyAuthApp = new api(
@@ -50,7 +52,6 @@ namespace M_Bytes
         {
             KeyAuthApp.init();
             EnableDarkMode();
-
 
         }
 
@@ -83,12 +84,6 @@ namespace M_Bytes
         {
             try
             {
-
-                // Set Token 
-
-                Token.SetToken();
-
-
                 user = guna2TextBox1.Text;
                 password = guna2TextBox2.Text;
 
@@ -96,14 +91,21 @@ namespace M_Bytes
 
                 if (KeyAuthApp.response.success)
                 {
-                    MSG.SH("Authentication\nSuccess !", "redirect to panel ...");
+                    MSG.SH("Authentication\nSuccess", "redirect to panel ...");
+
+                    user_data.Save(user);
+
+                    // set UserName Profile
+
+                    label1.Text = KeyAuthApp.user_data.username.ToString();
+
+                    Text = "M-Bytes | Home";
 
                     main.BringToFront();
                 }
                 else
                 {
                     string message = KeyAuthApp.response.message;
-
                     MSG.SH("Authentication\nFailed !", message);
                 }
             }
@@ -115,7 +117,7 @@ namespace M_Bytes
         }
 
 
-        private void guna2TextBox1_TextChanged(object sender, EventArgs e)
+        public static void guna2TextBox1_TextChanged(object sender, EventArgs e)
         {
 
         }
@@ -127,7 +129,7 @@ namespace M_Bytes
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-
+            
         }
 
         private void guna2CircleButton1_Click(object sender, EventArgs e)
@@ -140,6 +142,26 @@ namespace M_Bytes
             {
                 guna2TextBox2.PasswordChar = '\0';
             }
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2Button3_Click(object sender, EventArgs e)
+        {
+            option.Show();
+        }
+
+        private void guna2Button5_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void guna2TextBox1_TextChanged_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

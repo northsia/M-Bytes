@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace M_Bytes.Core.Messages
@@ -21,15 +22,20 @@ namespace M_Bytes.Core.Messages
         public info()
         {
             InitializeComponent();
-
-            int screenWidth = Screen.PrimaryScreen.WorkingArea.Width;
-            this.Location = new Point(screenWidth - this.Width, 0);
         }
 
         private void info_Load(object sender, EventArgs e)
         {
-            this.Show();
+            Visible = true;
+
+            int screenWidth = Screen.PrimaryScreen.WorkingArea.Width;
+            int screenHeight = Screen.PrimaryScreen.WorkingArea.Height;
+
+            this.Location = new Point(screenWidth - this.Width, screenHeight - this.Height);
         }
+
+
+
 
         private void guna2Button1_Click(object sender, EventArgs e)
         {

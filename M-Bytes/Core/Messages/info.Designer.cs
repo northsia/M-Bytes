@@ -1,4 +1,6 @@
-﻿namespace M_Bytes.Core.Messages
+﻿using System.Windows.Forms;
+
+namespace M_Bytes.Core.Messages
 {
     partial class info
     {
@@ -41,6 +43,7 @@
             // guna2BorderlessForm1
             // 
             this.guna2BorderlessForm1.AnimateWindow = true;
+            this.guna2BorderlessForm1.AnimationInterval = 600;
             this.guna2BorderlessForm1.ContainerControl = this;
             this.guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6D;
             this.guna2BorderlessForm1.TransparentWhileDrag = true;
@@ -71,7 +74,8 @@
             this.guna2HtmlLabel1.BackColor = System.Drawing.Color.Transparent;
             this.guna2HtmlLabel1.Font = new System.Drawing.Font("Microsoft Tai Le", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.guna2HtmlLabel1.ForeColor = System.Drawing.Color.White;
-            this.guna2HtmlLabel1.Location = new System.Drawing.Point(147, 34);
+            this.guna2HtmlLabel1.IsSelectionEnabled = false;
+            this.guna2HtmlLabel1.Location = new System.Drawing.Point(139, 34);
             this.guna2HtmlLabel1.Name = "guna2HtmlLabel1";
             this.guna2HtmlLabel1.Size = new System.Drawing.Size(117, 36);
             this.guna2HtmlLabel1.TabIndex = 2;
@@ -84,7 +88,8 @@
             this.guna2HtmlLabel2.BackColor = System.Drawing.Color.Transparent;
             this.guna2HtmlLabel2.Font = new System.Drawing.Font("Microsoft Tai Le", 9.8F);
             this.guna2HtmlLabel2.ForeColor = System.Drawing.Color.White;
-            this.guna2HtmlLabel2.Location = new System.Drawing.Point(147, 73);
+            this.guna2HtmlLabel2.IsSelectionEnabled = false;
+            this.guna2HtmlLabel2.Location = new System.Drawing.Point(144, 73);
             this.guna2HtmlLabel2.Name = "guna2HtmlLabel2";
             this.guna2HtmlLabel2.Size = new System.Drawing.Size(64, 23);
             this.guna2HtmlLabel2.TabIndex = 3;
@@ -101,7 +106,7 @@
             this.guna2Button1.FillColor = System.Drawing.Color.Lime;
             this.guna2Button1.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.guna2Button1.ForeColor = System.Drawing.Color.Black;
-            this.guna2Button1.Location = new System.Drawing.Point(360, 97);
+            this.guna2Button1.Location = new System.Drawing.Point(375, 97);
             this.guna2Button1.Name = "guna2Button1";
             this.guna2Button1.Size = new System.Drawing.Size(105, 32);
             this.guna2Button1.TabIndex = 4;
@@ -113,7 +118,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(477, 141);
+            this.ClientSize = new System.Drawing.Size(492, 141);
             this.Controls.Add(this.guna2Button1);
             this.Controls.Add(this.guna2HtmlLabel2);
             this.Controls.Add(this.guna2HtmlLabel1);
@@ -121,6 +126,10 @@
             this.Controls.Add(this.guna2Panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "info";
+            this.Opacity = 0D;
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.info_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

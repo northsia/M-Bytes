@@ -14,10 +14,12 @@ namespace M_Bytes.Core.Messages
         public static void SH(string Texth1, string Texth2)
         {
             info info = new info();
+
             info.Label1Text = Texth1;
             info.Label2Text = Texth2;
 
             info.Show();
+            info.Opacity = 1;
         }
     }
 }
