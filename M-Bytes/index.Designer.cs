@@ -169,7 +169,7 @@
             this.guna2HtmlLabel1.ForeColor = System.Drawing.Color.White;
             this.guna2HtmlLabel1.Location = new System.Drawing.Point(492, 432);
             this.guna2HtmlLabel1.Name = "guna2HtmlLabel1";
-            this.guna2HtmlLabel1.Size = new System.Drawing.Size(27, 22);
+            this.guna2HtmlLabel1.Size = new System.Drawing.Size(23, 18);
             this.guna2HtmlLabel1.TabIndex = 6;
             this.guna2HtmlLabel1.Text = "OR";
             this.guna2HtmlLabel1.Click += new System.EventHandler(this.guna2HtmlLabel1_Click);
@@ -202,7 +202,7 @@
             this.guna2HtmlLabel2.ForeColor = System.Drawing.Color.White;
             this.guna2HtmlLabel2.Location = new System.Drawing.Point(12, 538);
             this.guna2HtmlLabel2.Name = "guna2HtmlLabel2";
-            this.guna2HtmlLabel2.Size = new System.Drawing.Size(165, 22);
+            this.guna2HtmlLabel2.Size = new System.Drawing.Size(132, 18);
             this.guna2HtmlLabel2.TabIndex = 8;
             this.guna2HtmlLabel2.Text = "M-Bytes 2024 - 2025 ©";
             // 
@@ -269,6 +269,7 @@
             this.main.Name = "main";
             this.main.Size = new System.Drawing.Size(1043, 568);
             this.main.TabIndex = 9;
+            this.main.Paint += new System.Windows.Forms.PaintEventHandler(this.main_Paint);
             // 
             // buttons
             // 
@@ -395,7 +396,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Tai Le", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(70, 24);
+            this.label1.Location = new System.Drawing.Point(62, 27);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(70, 26);
             this.label1.TabIndex = 7;
@@ -418,8 +419,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1043, 568);
-            this.Controls.Add(this.auth);
             this.Controls.Add(this.main);
+            this.Controls.Add(this.auth);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "index";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

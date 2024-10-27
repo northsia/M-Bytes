@@ -2,6 +2,7 @@
 using M_Bytes.Core.Account;
 using M_Bytes.Core.EngineCL;
 using M_Bytes.Core.Messages;
+using M_Bytes.Core.WebApi;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
@@ -53,6 +54,11 @@ namespace M_Bytes
         {
             CheckNetwork.CheckConnection();
             KeyAuthApp.init();
+
+            // Set User Remembre
+            StartUPLoad.CheckUser(guna2TextBox1);
+
+
             EnableDarkMode();
 
         }
@@ -95,7 +101,7 @@ namespace M_Bytes
                 {
                     MSG.SH("Authentication\nSuccess", "redirect to panel ...");
 
-                    user_data.Save(user);
+                    user_data.Save(KeyAuthApp.user_data.username.ToString());
 
                     // set UserName Profile
 
@@ -162,6 +168,11 @@ namespace M_Bytes
         }
 
         private void guna2TextBox1_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void main_Paint(object sender, PaintEventArgs e)
         {
 
         }

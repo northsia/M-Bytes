@@ -36,7 +36,6 @@ namespace M_Bytes.Core.EngineCL
                 Thread.Sleep(5000);
 
 
-
                 // exit the app if No internet
 
                 Environment.Exit(0);
