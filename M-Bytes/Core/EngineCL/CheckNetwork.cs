@@ -1,4 +1,5 @@
 ﻿using M_Bytes.Core.Messages;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,10 @@ namespace M_Bytes.Core.EngineCL
 {
     internal class CheckNetwork
     {
+
+
+        public static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         public static bool IsNetworkAvailable()
         {
             try
@@ -28,13 +33,13 @@ namespace M_Bytes.Core.EngineCL
             }
         }
 
-        public static void CheckConnection()
+        public async static void CheckConnection()
         {
             if (!IsNetworkAvailable())
             {
                 MSG.SH("Connection Error", "Check Your Network & Try Again.");
-                Thread.Sleep(5000);
-
+                logger.Log(LogLevel.Error, "No Internet Connection.");
+                await Task.Delay(2000);
 
                 // exit the app if No internet
 

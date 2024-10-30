@@ -1,29 +1,36 @@
-﻿using KeyAuth;
+﻿using Guna.UI2.WinForms;
+using KeyAuth;
 using M_Bytes.Core.Account;
 using M_Bytes.Core.EngineCL;
 using M_Bytes.Core.Messages;
-using M_Bytes.Core.WebApi;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NLog;
 
 namespace M_Bytes
 {
     public partial class index : Form
     {
 
+        public static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
+
         public static string user;
         public static string password;
         string api_user;
+        string Directory_For_Duplicate;
 
 
         public static api KeyAuthApp = new api(
@@ -32,10 +39,22 @@ namespace M_Bytes
             version: "1.0" // Application version. Used for automatic downloads see video here https://www.youtube.com/watch?v=kW195PLCBKs
         );
 
+        private PrivateFontCollection customFonts = new PrivateFontCollection();
 
         public index()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
+
+                LoadCustomFont("Fonts/Gotham.otf");
+
+                ApplyFontToAllLabels();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
         }
 
 
@@ -52,16 +71,75 @@ namespace M_Bytes
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            CheckNetwork.CheckConnection();
-            KeyAuthApp.init();
-
-            // Set User Remembre
-            StartUPLoad.CheckUser(guna2TextBox1);
+            try
+            {
+                logger.Info("Started M-Bytes");
 
 
-            EnableDarkMode();
+                CheckNetwork.CheckConnection();
+                //KeyAuthApp.init();
+
+                // Set User Remembre
+                StartUPLoad.CheckUser(guna2TextBox1);
+
+
+                EnableDarkMode();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+            
 
         }
+
+
+        private void LoadCustomFont(string fontPath)
+        {
+            if (!System.IO.File.Exists(fontPath))
+            {
+                MessageBox.Show("Font file not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            IntPtr fontPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(byte)) * 1024);
+            try
+            {
+                customFonts.AddFontFile(fontPath);
+                Font customFont = new Font(customFonts.Families[0], 12, FontStyle.Regular);
+                guna2HtmlLabel3.Font = customFont; 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading font: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Marshal.FreeCoTaskMem(fontPtr);
+            }
+        }
+
+        private void ApplyFontToAllLabels()
+        {
+            if (customFonts.Families.Length > 0)
+            {
+                Font customFont = new Font(customFonts.Families[0], 12, FontStyle.Regular);
+
+                foreach (Control control in this.Controls)
+                {
+                    if (control is Label label)
+                    {
+                        label.Font = customFont;
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Failed to load the custom font.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
 
         private void guna2HtmlLabel1_Click(object sender, EventArgs e)
         {
@@ -159,7 +237,14 @@ namespace M_Bytes
 
         private void guna2Button3_Click(object sender, EventArgs e)
         {
-            option.Show();
+            if (option.Visible == false)
+            {
+                option.Visible = true;
+            }
+            else
+            {
+                option.Visible = false;
+            }
         }
 
         private void guna2Button5_Click(object sender, EventArgs e)
@@ -175,6 +260,162 @@ namespace M_Bytes
         private void main_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void guna2Button4_Click(object sender, EventArgs e)
+        {
+            
+            //pictureBox4.Visible = true;
+            /// This if Done !!
+            /// 
+
+
+             
+        }
+
+        private void guna2CircleProgressBar1_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private async void guna2Button8_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                circlebar.Visible = true;
+
+                if (guna2CheckBox3.Checked)
+                {
+                    Task Cleanup = Task.Run(async () =>
+                    {
+                        await EngineCL.CleanTemp();
+                        await EngineCL.RemoveStartUpFiles();
+                        await EngineCL.CleanPerfetch();
+                    });
+
+                    MSG.SH("Done !", "Task Completed ...");
+                    await Cleanup;
+                }
+                else if (!guna2CheckBox3.Checked)
+                {
+                    Task Cleanup = Task.Run(async () =>
+                    {
+                        await EngineCL.CleanPerfetch();
+                        await EngineCL.CleanTemp();
+                    });
+
+                    MSG.SH("Done !", "Task Completed ...");
+                    await Cleanup;
+                }
+            }
+            finally
+            {
+                circlebar.Visible = false;
+            }
+        }
+
+
+        private void guna2CheckBox3_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2CheckBox2_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2CheckBox3_CheckedChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void center_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void guna2HtmlLabel3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2Button5_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private async void guna2Button9_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                circlebar.Show();
+
+                if (guna2CheckBox2.Checked && !string.IsNullOrWhiteSpace(guna2TextBox3.Text))
+                {
+                    await Task.Run(() => EngineCL.DeleteDuplicateFilesAsync(guna2TextBox3.Text));
+                }
+                else if (!guna2CheckBox2.Checked)
+                {
+                    await Task.Run(() => EngineCL.DELETE_ALL_DEBLUCATE_FILES());
+                }
+
+                MSG.SH("Done !", "Done Remove Duplicate ...");
+            }
+            catch (Exception ex)
+            {
+                MSG.SH("Error", $"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                circlebar.Hide();
+            }
+        }
+
+
+
+        private void guna2CheckBox2_CheckedChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2TextBox3_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2CircleButton2_Click(object sender, EventArgs e)
+        {
+            if (guna2CheckBox2.Checked) 
+            {
+                FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+                if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string Directory_For_Duplicate = folderBrowserDialog.SelectedPath;
+                    guna2TextBox3.Text = Directory_For_Duplicate;
+                }
+            }
+
+        }
+
+        private void Duplicate_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void index_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            logger.Info("Application is closing at {0}", DateTime.Now);
+        }
+
+        private void guna2Button10_Click(object sender, EventArgs e)
+        {
+            auth.BringToFront();
         }
     }
 }
