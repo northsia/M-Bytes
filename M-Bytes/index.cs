@@ -18,12 +18,26 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NLog;
+using FirebaseAdmin.Auth;
+using Auth0.OidcClient;
+using IdentityModel.OidcClient;
+using M_Bytes.Core.Firebase_data;
 
 namespace M_Bytes
 {
     public partial class index : Form
     {
 
+        /// <summary>
+        /// This M-Bytes UI ==> User InterFace
+        /// Created by : Meed
+        /// </summary>
+
+
+
+        /// <summary>
+        /// logger For Debug ...
+        /// </summary>
         public static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
 
@@ -31,7 +45,6 @@ namespace M_Bytes
         public static string password;
         string api_user;
         string Directory_For_Duplicate;
-
 
         public static api KeyAuthApp = new api(
             name: "M-Bytes", // App name - VaultCord.com FREE Discord backup bot for members & your entire server saved from terms and nukes!
@@ -49,7 +62,6 @@ namespace M_Bytes
 
                 LoadCustomFont("Fonts/Gotham.otf");
 
-                ApplyFontToAllLabels();
             }
             catch (Exception ex)
             {
@@ -69,29 +81,45 @@ namespace M_Bytes
             DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref isDarkMode, sizeof(int));
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+
+        private void LoadLabelFont()
+        {
+            Font LabelFont = new Font(customFonts.Families[0], 19, FontStyle.Regular);
+            Font NameFont = new Font(customFonts.Families[0], 12, FontStyle.Regular);
+
+            guna2HtmlLabel4.Font = LabelFont;
+            label1.Font = NameFont;
+            guna2HtmlLabel5.Font = LabelFont;
+            guna2HtmlLabel6.Font = LabelFont;
+            guna2HtmlLabel3.Font = LabelFont;
+
+
+        }
+
+        private async void SetCPR()
         {
             try
             {
-                logger.Info("Started M-Bytes");
+                string CPR = await FIREBASE_DATA_API.SEND_GET_DATA_("Copyright");
 
+                CPR = CPR?.Replace("\"", string.Empty);
 
-                CheckNetwork.CheckConnection();
-                //KeyAuthApp.init();
-
-                // Set User Remembre
-                StartUPLoad.CheckUser(guna2TextBox1);
-
-
-                EnableDarkMode();
+                if (!string.IsNullOrEmpty(CPR))
+                {
+                    guna2HtmlLabel2.Text = CPR;
+                }
+                else
+                {
+                    guna2HtmlLabel2.Text = "M-Bytes | m33d";
+                }
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                logger.Error(ex.ToString());
             }
-            
-
         }
+
+
 
 
         private void LoadCustomFont(string fontPath)
@@ -107,7 +135,6 @@ namespace M_Bytes
             {
                 customFonts.AddFontFile(fontPath);
                 Font customFont = new Font(customFonts.Families[0], 12, FontStyle.Regular);
-                guna2HtmlLabel3.Font = customFont; 
             }
             catch (Exception ex)
             {
@@ -118,28 +145,6 @@ namespace M_Bytes
                 Marshal.FreeCoTaskMem(fontPtr);
             }
         }
-
-        private void ApplyFontToAllLabels()
-        {
-            if (customFonts.Families.Length > 0)
-            {
-                Font customFont = new Font(customFonts.Families[0], 12, FontStyle.Regular);
-
-                foreach (Control control in this.Controls)
-                {
-                    if (control is Label label)
-                    {
-                        label.Font = customFont;
-                    }
-                }
-            }
-            else
-            {
-                MessageBox.Show("Failed to load the custom font.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-
 
         private void guna2HtmlLabel1_Click(object sender, EventArgs e)
         {
@@ -170,6 +175,10 @@ namespace M_Bytes
         {
             try
             {
+                guna2CircleProgressBar1.Show();
+
+                await Task.Delay(3000);
+
                 user = guna2TextBox1.Text;
                 password = guna2TextBox2.Text;
 
@@ -177,7 +186,7 @@ namespace M_Bytes
 
                 if (KeyAuthApp.response.success)
                 {
-                    MSG.SH("Authentication\nSuccess", "redirect to panel ...");
+                    MSG.SH("Authentication\nSuccess !", "redirect to panel ...");
 
                     user_data.Save(KeyAuthApp.user_data.username.ToString());
 
@@ -195,12 +204,13 @@ namespace M_Bytes
                     MSG.SH("Authentication\nFailed !", message);
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
 
                 MSG.SH("Failed !", $"{ex.Message}");
             }
-            
         }
+
 
 
         public static void guna2TextBox1_TextChanged(object sender, EventArgs e)
@@ -208,7 +218,7 @@ namespace M_Bytes
 
         }
 
-        private void guna2TextBox2_TextChanged(object sender, EventArgs e)
+        private void guna2TextBox2_TextChanged(object sender, EventArgs e) // PASSWD AUTH
         {
 
         }
@@ -252,7 +262,7 @@ namespace M_Bytes
             
         }
 
-        private void guna2TextBox1_TextChanged_1(object sender, EventArgs e)
+        private void guna2TextBox1_TextChanged_1(object sender, EventArgs e) // USER AUTH
         {
 
         }
@@ -264,13 +274,8 @@ namespace M_Bytes
 
         private void guna2Button4_Click(object sender, EventArgs e)
         {
-            
-            //pictureBox4.Visible = true;
-            /// This if Done !!
-            /// 
+            FullCL.BringToFront();
 
-
-             
         }
 
         private void guna2CircleProgressBar1_ValueChanged(object sender, EventArgs e)
@@ -283,40 +288,9 @@ namespace M_Bytes
 
         }
 
-        private async void guna2Button8_Click(object sender, EventArgs e)
+        private void guna2Button8_Click(object sender, EventArgs e)
         {
-            try
-            {
-                circlebar.Visible = true;
-
-                if (guna2CheckBox3.Checked)
-                {
-                    Task Cleanup = Task.Run(async () =>
-                    {
-                        await EngineCL.CleanTemp();
-                        await EngineCL.RemoveStartUpFiles();
-                        await EngineCL.CleanPerfetch();
-                    });
-
-                    MSG.SH("Done !", "Task Completed ...");
-                    await Cleanup;
-                }
-                else if (!guna2CheckBox3.Checked)
-                {
-                    Task Cleanup = Task.Run(async () =>
-                    {
-                        await EngineCL.CleanPerfetch();
-                        await EngineCL.CleanTemp();
-                    });
-
-                    MSG.SH("Done !", "Task Completed ...");
-                    await Cleanup;
-                }
-            }
-            finally
-            {
-                circlebar.Visible = false;
-            }
+            
         }
 
 
@@ -347,7 +321,7 @@ namespace M_Bytes
 
         private void guna2Button5_Click_1(object sender, EventArgs e)
         {
-
+            Duplicate.BringToFront();
         }
 
         private async void guna2Button9_Click(object sender, EventArgs e)
@@ -362,7 +336,7 @@ namespace M_Bytes
                 }
                 else if (!guna2CheckBox2.Checked)
                 {
-                    await Task.Run(() => EngineCL.DELETE_ALL_DEBLUCATE_FILES());
+                    MSG.SH("Nope","You Must Check the Box !");
                 }
 
                 MSG.SH("Done !", "Done Remove Duplicate ...");
@@ -413,9 +387,189 @@ namespace M_Bytes
             logger.Info("Application is closing at {0}", DateTime.Now);
         }
 
-        private void guna2Button10_Click(object sender, EventArgs e)
+        private async void guna2Button10_Click(object sender, EventArgs e)
         {
+            circlebar.Show();
+
+            await Task.Delay(600);
+
+
             auth.BringToFront();
+
+            circlebar.Hide();
+        }
+
+        private void guna2Button6_Click(object sender, EventArgs e)
+        {
+            BrowserCL.BringToFront();
+        }
+
+        private async void guna2Button11_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                circlebar.Visible = true;
+
+                if (guna2CheckBox3.Checked)
+                {
+                    Task Cleanup = Task.Run(async () =>
+                    {
+                        await EngineCL.CleanAllBrowserCaches();
+                        await EngineCL.RegistryClean();
+                        await EngineCL.MemoryClean();
+                        await EngineCL.CleanTemp();
+                        await EngineCL.RemoveStartUpFiles();
+                        await EngineCL.CleanPrefetch();
+                    });
+
+                    MSG.SH("Done !", "Cleaning Seccess !");
+                    await Cleanup;
+                }
+                else if (!guna2CheckBox3.Checked)
+                {
+                    Task Cleanup = Task.Run(async () =>
+                    {
+                        await EngineCL.CleanAllBrowserCaches();
+                        await EngineCL.RegistryClean();
+                        await EngineCL.MemoryClean();
+                        await EngineCL.CleanTemp();
+                        await EngineCL.CleanPrefetch();
+                    });
+
+                    await Cleanup;
+                }
+            }
+            finally
+            {
+                MSG.SH("Done !", "Task Completed ...");
+                circlebar.Visible = false;
+            }
+
+        }
+
+        private void BrowserCL_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void guna2CheckBox4_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2HtmlLabel4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2HtmlLabel5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2HtmlLabel6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2Button7_Click(object sender, EventArgs e)
+        {
+            Blocker.BringToFront();
+        }
+
+        private void guna2CircleButton3_Click(object sender, EventArgs e)
+        {
+            FileDialog fileDialog = new OpenFileDialog();
+            if (fileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = fileDialog.FileName;
+                guna2TextBox4.Text = filePath;
+            }
+        }
+
+        private void guna2TextBox4_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private async void guna2Button12_Click(object sender, EventArgs e)
+        {
+            string filePath = guna2TextBox4.Text;
+
+            if (File.Exists(filePath))
+            {
+                await Task.Run(() => EngineCL.BLOCK_FIREWALL_APP(filePath));
+            }
+
+        }
+
+        private async void guna2Button13_Click(object sender, EventArgs e)
+        {
+            string filePath = guna2TextBox4.Text;
+
+            if (File.Exists(filePath))
+            {
+                await Task.Run(() => EngineCL.UNBLOCK_FIREWALL_APP(filePath));
+            }
+        }
+
+        private void guna2HtmlLabel3_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2CircleProgressBar1_ValueChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2HtmlLabel2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+
+        private async void index_Load(object sender, EventArgs e)
+        {
+            try
+            {
+
+                SetCPR();
+
+                KeyAuthApp.init();
+
+
+                EnableDarkMode();
+
+                CheckNetwork.CheckConnection();
+
+                
+                // Set User Remembre
+                StartUPLoad.CheckUser(guna2TextBox1);
+
+
+
+                LoadLabelFont();
+
+                logger.Info("Started M-Bytes");
+                logger.Info("Starting Core.EngineCl ...");
+                await Task.Delay(2000);
+                logger.Info($"{nameof(index_Load)} Started");
+                logger.Info("Core.EngineCL Started [+]");
+
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+        }
+
+
+
+        private void Blocker_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

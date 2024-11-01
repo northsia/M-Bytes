@@ -1,17 +1,167 @@
-﻿using M_Bytes.Core.Messages;
+﻿using Guna.UI2.WinForms;
+using M_Bytes.Core.Messages;
 using Microsoft.Win32;
+using NLog;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace M_Bytes.Core.EngineCL
 {
     internal class EngineCL
     {
+        public static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
+
+        public async static Task BLOCK_FIREWALL_APP(string PATH)
+        {
+            
+            if (string.IsNullOrWhiteSpace(PATH))
+            {
+                MSG.SH("Error Path", "Please Enter App Path");
+                return;
+            }
+
+            await Task.Run(() =>
+            {
+                try
+                {
+                    string command = $"New-NetFirewallRule -DisplayName \"Block_{PATH}\" -Direction Outbound -Program \"{PATH}\" -Action Block";
+
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = "powershell.exe",
+                        Arguments = command,
+                        Verb = "runas",  /// ADMIN PRIV ...
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+
+                    Process process = Process.Start(psi);
+                    process.WaitForExit();
+
+                    logger.Info($"ENGINE.CL: Blocked {PATH}");
+
+                    MSG.SH("Success", $"Blocked {PATH}");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, $"ENGINE.CL: Error Blocking {PATH}");
+                }
+            });
+        }
+
+
+
+
+        public async static Task UNBLOCK_FIREWALL_APP(string PATH)
+        {
+            
+            if (string.IsNullOrWhiteSpace(PATH))
+            {
+                MSG.SH("Error Path", "Please Enter App Path");
+                return;
+            }
+
+            await Task.Run(() =>
+            {
+                try
+                {
+                    string command = $"Remove-NetFirewallRule -DisplayName \"Block_{PATH}\"";
+
+                    ProcessStartInfo psi = new ProcessStartInfo
+                    {
+                        FileName = "powershell.exe",
+                        Arguments = command,
+                        Verb = "runas", 
+                        CreateNoWindow = true
+                    };
+
+                    Process process = Process.Start(psi);
+                    process.WaitForExit();
+
+                    logger.Info($"ENGINE.CL: Unblocked {PATH}");
+
+                    MSG.SH("Success", $"Unblocked {PATH}");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, $"ENGINE.CL: Error Unblocking {PATH}");
+                }
+            });
+        }
+
+
+        public static Task MemoryClean()
+        {
+            return Task.Run(() =>
+            {
+                try
+                {
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    logger.Info("ENGINE.CL: Memory cleaned successfully.");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "ENGINE.CL: Error during memory clean.");
+                }
+            });
+        }
+
+        public static Task RegistryClean()
+        {
+            return Task.Run(() =>
+            {
+                try
+                {
+                    using (RegistryKey currentUserKey = Registry.CurrentUser.OpenSubKey(@"Software\YourApplication", writable: true))
+                    {
+                        if (currentUserKey != null)
+                        {
+                            string[] valueNames = currentUserKey.GetValueNames();
+                            foreach (string valueName in valueNames)
+                            {
+                                currentUserKey.DeleteValue(valueName, throwOnMissingValue: false);
+                                logger.Info($"ENGINE.CL: Deleted registry value '{valueName}' from HKEY_CURRENT_USER\\Software\\YourApplication");
+                            }
+                        }
+                    }
+                    logger.Info("ENGINE.CL: Registry cleaned successfully.");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, "ENGINE.CL: Error during registry clean.");
+                }
+            });
+        }
+
+
+
+        public static Task CleanAllBrowserCaches()
+        {
+            return Task.Run(async () =>
+            {
+                string userDataPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    "Google\\Chrome\\User Data");
+
+                var profileDirectories = Directory.GetDirectories(userDataPath);
+
+                foreach (var profileDir in profileDirectories)
+                {
+                    string cachePath = Path.Combine(profileDir, "Cache");
+                    await RemoveAllFiles(cachePath);
+                }
+            });
+        }
+
         public static Task DeleteDuplicateFilesAsync(string folderPath)
         {
             return Task.Run(() =>
@@ -37,7 +187,7 @@ namespace M_Bytes.Core.EngineCL
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"Error hashing file '{filePath}': {ex.Message}");
+                            logger.Error(ex, $"ENGINE.CL: Error hashing file '{filePath}'");
                         }
                     });
 
@@ -51,10 +201,11 @@ namespace M_Bytes.Core.EngineCL
                                 try
                                 {
                                     File.Delete(duplicateFiles[i]);
+                                    logger.Info($"ENGINE.CL: Deleted duplicate file '{duplicateFiles[i]}'");
                                 }
                                 catch (Exception ex)
                                 {
-                                    Console.WriteLine($"Error deleting file '{duplicateFiles[i]}': {ex.Message}");
+                                    logger.Error(ex, $"ENGINE.CL: Error deleting file '{duplicateFiles[i]}'");
                                 }
                             }
                         }
@@ -62,31 +213,11 @@ namespace M_Bytes.Core.EngineCL
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing folder '{folderPath}': {ex.Message}");
+                    logger.Error(ex, $"ENGINE.CL: Error processing folder '{folderPath}'");
                 }
             });
         }
 
-        public static Task DELETE_ALL_DEBLUCATE_FILES()
-        {
-            return Task.Run(async () =>
-            {
-                foreach (var drive in DriveInfo.GetDrives())
-                {
-                    if (drive.IsReady && drive.DriveType == DriveType.Fixed)
-                    {
-                        try
-                        {
-                            await DeleteDuplicateFilesAsync(drive.RootDirectory.FullName);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Error scanning drive '{drive.Name}': {ex.Message}");
-                        }
-                    }
-                }
-            });
-        }
 
         private static string ComputeFileHash(string filePath)
         {
@@ -99,12 +230,23 @@ namespace M_Bytes.Core.EngineCL
                     return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
                 }
             }
+            catch (FileNotFoundException ex)
+            {
+                logger.Error(ex, $"ENGINE.CL: File not found '{filePath}'.");
+                return null;
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                logger.Error(ex, $"ENGINE.CL: Access denied to file '{filePath}'.");
+                return null;
+            }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error computing hash for '{filePath}': {ex.Message}");
+                logger.Error(ex, $"ENGINE.CL: Error computing hash for '{filePath}'.");
                 return null;
             }
         }
+
 
         public static async Task CleanTemp()
         {
@@ -112,10 +254,10 @@ namespace M_Bytes.Core.EngineCL
             await RemoveAllFiles(tempPath);
         }
 
-        public static async Task CleanPerfetch()
+        public static async Task CleanPrefetch()
         {
-            string perfetchPath = Environment.GetFolderPath(Environment.SpecialFolder.InternetCache);
-            await RemoveAllFiles(perfetchPath);
+            string prefetchPath = Environment.GetFolderPath(Environment.SpecialFolder.InternetCache);
+            await RemoveAllFiles(prefetchPath);
         }
 
         public static async Task RemoveStartUpFiles()
@@ -133,13 +275,14 @@ namespace M_Bytes.Core.EngineCL
                         foreach (string valueName in valueNames)
                         {
                             startupKey.DeleteValue(valueName, throwOnMissingValue: false);
+                            logger.Info($"ENGINE.CL: Deleted startup entry '{valueName}'");
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error removing startup files: {ex.Message}");
+                logger.Error(ex, "ENGINE.CL: Error removing startup files");
             }
         }
 
@@ -156,10 +299,11 @@ namespace M_Bytes.Core.EngineCL
                         try
                         {
                             File.Delete(file);
+                            logger.Info($"ENGINE.CL: Deleted file '{file}'");
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"Error deleting file '{file}': {ex.Message}");
+                            logger.Error(ex, $"ENGINE.CL: Error deleting file '{file}'");
                         }
                     }));
 
@@ -167,12 +311,12 @@ namespace M_Bytes.Core.EngineCL
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error removing all files in '{path}': {ex.Message}");
+                    logger.Error(ex, $"ENGINE.CL: Error removing all files in '{path}'");
                 }
             }
             else
             {
-                MSG.SH("Warning", "Directory does not exist: " + path);
+                logger.Warn($"ENGINE.CL: Directory does not exist: {path}");
             }
         }
     }

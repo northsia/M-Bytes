@@ -103,9 +103,29 @@ namespace M_Bytes.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap block_firewall__1_ {
+            get {
+                object obj = ResourceManager.GetObject("block firewall (1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap bytes {
             get {
                 object obj = ResourceManager.GetObject("bytes", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap CL {
+            get {
+                object obj = ResourceManager.GetObject("CL", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -136,6 +156,16 @@ namespace M_Bytes.Properties {
         internal static System.Drawing.Bitmap M {
             get {
                 object obj = ResourceManager.GetObject("M", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap M2 {
+            get {
+                object obj = ResourceManager.GetObject("M2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
