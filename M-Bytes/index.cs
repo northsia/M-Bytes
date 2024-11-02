@@ -22,6 +22,9 @@ using FirebaseAdmin.Auth;
 using Auth0.OidcClient;
 using IdentityModel.OidcClient;
 using M_Bytes.Core.Firebase_data;
+using dotenv.net;
+using Microsoft.Win32;
+using System.Text.Json;
 
 namespace M_Bytes
 {
@@ -46,6 +49,10 @@ namespace M_Bytes
         string api_user;
         string Directory_For_Duplicate;
 
+
+        private static readonly string name;
+
+        
         public static api KeyAuthApp = new api(
             name: "M-Bytes", // App name - VaultCord.com FREE Discord backup bot for members & your entire server saved from terms and nukes!
             ownerid: "4Mgrdto854", // Account ID
@@ -58,6 +65,7 @@ namespace M_Bytes
         {
             try
             {
+
                 InitializeComponent();
 
                 LoadCustomFont("Fonts/Gotham.otf");
@@ -81,9 +89,9 @@ namespace M_Bytes
             DwmSetWindowAttribute(this.Handle, DWMWA_USE_IMMERSIVE_DARK_MODE, ref isDarkMode, sizeof(int));
         }
 
-
         private void LoadLabelFont()
         {
+
             Font LabelFont = new Font(customFonts.Families[0], 19, FontStyle.Regular);
             Font NameFont = new Font(customFonts.Families[0], 12, FontStyle.Regular);
 
@@ -177,7 +185,7 @@ namespace M_Bytes
             {
                 guna2CircleProgressBar1.Show();
 
-                await Task.Delay(3000);
+                await Task.Delay(1000);
 
                 user = guna2TextBox1.Text;
                 password = guna2TextBox2.Text;
@@ -288,9 +296,45 @@ namespace M_Bytes
 
         }
 
-        private void guna2Button8_Click(object sender, EventArgs e)
+        private async void guna2Button8_Click(object sender, EventArgs e) // FULL CL
         {
-            
+            try
+            {
+                circlebar.Visible = true;
+
+                if (guna2CheckBox3.Checked)
+                {
+                    Task Cleanup = Task.Run(async () =>
+                    {
+                        await EngineCL.CleanAllBrowserCaches();
+                        await EngineCL.RegistryClean();
+                        await EngineCL.MemoryClean();
+                        await EngineCL.CleanTemp();
+                        await EngineCL.RemoveStartUpFiles();
+                        await EngineCL.CleanPrefetch();
+                    });
+
+                    await Cleanup;
+                }
+                else if (!guna2CheckBox3.Checked)
+                {
+                    Task Cleanup = Task.Run(async () =>
+                    {
+                        await EngineCL.CleanAllBrowserCaches();
+                        await EngineCL.RegistryClean();
+                        await EngineCL.MemoryClean();
+                        await EngineCL.CleanTemp();
+                        await EngineCL.CleanPrefetch();
+                    });
+
+                    await Cleanup;
+                }
+            }
+            finally
+            {
+                MSG.SH("Done !", "Cleaning Seccess !");
+                circlebar.Visible = false;
+            }
         }
 
 
@@ -415,14 +459,8 @@ namespace M_Bytes
                     Task Cleanup = Task.Run(async () =>
                     {
                         await EngineCL.CleanAllBrowserCaches();
-                        await EngineCL.RegistryClean();
-                        await EngineCL.MemoryClean();
-                        await EngineCL.CleanTemp();
-                        await EngineCL.RemoveStartUpFiles();
-                        await EngineCL.CleanPrefetch();
                     });
 
-                    MSG.SH("Done !", "Cleaning Seccess !");
                     await Cleanup;
                 }
                 else if (!guna2CheckBox3.Checked)
@@ -430,10 +468,7 @@ namespace M_Bytes
                     Task Cleanup = Task.Run(async () =>
                     {
                         await EngineCL.CleanAllBrowserCaches();
-                        await EngineCL.RegistryClean();
-                        await EngineCL.MemoryClean();
-                        await EngineCL.CleanTemp();
-                        await EngineCL.CleanPrefetch();
+
                     });
 
                     await Cleanup;
@@ -441,7 +476,7 @@ namespace M_Bytes
             }
             finally
             {
-                MSG.SH("Done !", "Task Completed ...");
+                MSG.SH("Done !", "Browser Cleaned !");
                 circlebar.Visible = false;
             }
 
@@ -492,14 +527,24 @@ namespace M_Bytes
 
         }
 
-        private async void guna2Button12_Click(object sender, EventArgs e)
+        private void guna2Button12_Click(object sender, EventArgs e)
         {
-            string filePath = guna2TextBox4.Text;
-
-            if (File.Exists(filePath))
+            try
             {
-                await Task.Run(() => EngineCL.BLOCK_FIREWALL_APP(filePath));
+                string filePath = guna2TextBox4.Text;
+
+                MessageBox.Show(filePath);
+
+                if (File.Exists(filePath))
+                {
+                    Task.Run(() => EngineCL.BLOCK_FIREWALL_APP(filePath));
+                }
             }
+            catch (Exception ex)
+            {
+                MSG.SH("Error",ex.Message);
+            }
+            
 
         }
 
@@ -528,12 +573,37 @@ namespace M_Bytes
 
         }
 
+        private void LoadCustomFont()
+        {
+            PrivateFontCollection pfc = new PrivateFontCollection();
 
+            string resource = "M-Bytes.Gotham.otf";
+
+            using (Stream fontStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
+            {
+                if (fontStream != null)
+                {
+                    byte[] fontData = new byte[fontStream.Length];
+                    fontStream.Read(fontData, 0, fontData.Length);
+
+                    IntPtr fontPtr = Marshal.AllocCoTaskMem(fontData.Length);
+                    Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
+                    pfc.AddMemoryFont(fontPtr, fontData.Length);
+                    Marshal.FreeCoTaskMem(fontPtr);
+                }
+            }
+
+            foreach (Control control in this.Controls)
+            {
+                control.Font = new Font(pfc.Families[0], control.Font.Size);
+            }
+        }
 
         private async void index_Load(object sender, EventArgs e)
         {
             try
             {
+                LoadTheLastRecoveryDate();
 
                 SetCPR();
 
@@ -548,7 +618,7 @@ namespace M_Bytes
                 // Set User Remembre
                 StartUPLoad.CheckUser(guna2TextBox1);
 
-
+                LoadCustomFont();
 
                 LoadLabelFont();
 
@@ -568,6 +638,130 @@ namespace M_Bytes
 
 
         private void Blocker_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+
+        private void LoadTheLastRecoveryDate()
+        {
+            try
+            {
+                // Define the path to the JSON file
+                string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "user_data", "last_Recovery_date.json");
+
+                // Check if the file exists
+                if (File.Exists(filePath))
+                {
+                    // Read the JSON data from the file
+                    string jsonData = File.ReadAllText(filePath);
+
+                    // Deserialize the JSON data to an anonymous object
+                    var recoveryData = JsonSerializer.Deserialize<RecoveryData>(jsonData);
+
+                    if (recoveryData != null)
+                    {
+                        // Access the properties from the recovery data
+                        string description = recoveryData.Description;
+                        string date = recoveryData.Date;
+
+
+                        guna2TextBox6.Text = date;
+
+                        // Log or display the recovery data as needed
+                        logger.Info($"Last Recovery Description: {description}");
+                        logger.Info($"Last Recovery Date: {date}");
+                    }
+                }
+                else
+                {
+                    logger.Warn("ENGINE.CL: last_Recovery_date.json file does not exist.");
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error($"ENGINE.CL: Error loading the last recovery date. {ex.Message}");
+            }
+        }
+
+        // Define a class to match the structure of the JSON data
+        public class RecoveryData
+        {
+            public string Description { get; set; }
+            public string Date { get; set; }
+        }
+
+
+        private async void guna2Button15_Click(object sender, EventArgs e) // Recovery
+        {
+            circlebar.Show();
+
+            string discrp = guna2TextBox5.Text; 
+            string recovery_date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+            try
+            {
+                logger.Info($"ENGINE.CL: Recovery Point Creation Started at {recovery_date}");
+
+                // Define the path and JSON content
+                string directoryPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "user_data");
+                string filePath = Path.Combine(directoryPath, "last_Recovery_date.json");
+
+                // Ensure directory exists
+                Directory.CreateDirectory(directoryPath);
+
+                // Create the recovery data as an object
+                var recoveryData = new
+                {
+                    Description = discrp,
+                    Date = recovery_date
+                };
+
+                // Serialize to JSON and write to file
+                string jsonData = JsonSerializer.Serialize(recoveryData, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(filePath, jsonData);
+
+                // Create the recovery point
+                await Task.Run(() => EngineCL.CREAT_RECOVERY_POINT(discrp));
+
+                logger.Info("ENGINE.CL: Recovery Point Created Successfully");
+            }
+            catch (Exception ex)
+            {
+                logger.Error($"ENGINE.CL: Recovery Point Creation Failed. Error: {ex.Message}");
+            }
+            finally
+            {
+                circlebar.Hide();
+            }
+        }
+
+        private void recovery_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void guna2HtmlLabel8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2TextBox5_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2Button14_Click(object sender, EventArgs e)
+        {
+            recovery.BringToFront();
+        }
+
+        private void guna2TextBox6_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2Button16_Click(object sender, EventArgs e)
         {
 
         }

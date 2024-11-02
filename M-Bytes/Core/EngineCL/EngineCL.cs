@@ -18,6 +18,37 @@ namespace M_Bytes.Core.EngineCL
     {
         public static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+        public static async Task CREAT_RECOVERY_POINT(string description)
+        {
+            try
+            {
+                string command = $"Checkpoint-Computer -Description \"{description}\" -RestorePointType \"MODIFY_SETTINGS\"";
+
+                ProcessStartInfo psi = new ProcessStartInfo
+                {
+                    FileName = "powershell.exe",
+                    Arguments = command,
+                    Verb = "runas",
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden
+                };
+
+                await Task.Run(() =>
+                {
+                    using (Process process = Process.Start(psi))
+                    {
+                        process.WaitForExit();
+                    }
+                });
+
+                Console.WriteLine("Recovery point created successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating recovery point: {ex.Message}");
+            }
+        }
 
         public async static Task BLOCK_FIREWALL_APP(string PATH)
         {
@@ -46,13 +77,16 @@ namespace M_Bytes.Core.EngineCL
                     Process process = Process.Start(psi);
                     process.WaitForExit();
 
-                    logger.Info($"ENGINE.CL: Blocked {PATH}");
 
-                    MSG.SH("Success", $"Blocked {PATH}");
                 }
                 catch (Exception ex)
                 {
-                    logger.Error(ex, $"ENGINE.CL: Error Blocking {PATH}");
+                    logger.Error(ex, $"ENGINE.CL: Error Blocking");
+                }
+                finally
+                {
+                    MSG.SH("Success", $"Blocked");
+                    logger.Info($"ENGINE.CL: Blocked {PATH}");
                 }
             });
         }
@@ -62,7 +96,6 @@ namespace M_Bytes.Core.EngineCL
 
         public async static Task UNBLOCK_FIREWALL_APP(string PATH)
         {
-            
             if (string.IsNullOrWhiteSpace(PATH))
             {
                 MSG.SH("Error Path", "Please Enter App Path");
@@ -79,15 +112,18 @@ namespace M_Bytes.Core.EngineCL
                     {
                         FileName = "powershell.exe",
                         Arguments = command,
-                        Verb = "runas", 
-                        CreateNoWindow = true
+                        Verb = "runas",
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        WindowStyle = ProcessWindowStyle.Hidden
                     };
 
-                    Process process = Process.Start(psi);
-                    process.WaitForExit();
+                    using (Process process = Process.Start(psi))
+                    {
+                        process.WaitForExit();
+                    }
 
                     logger.Info($"ENGINE.CL: Unblocked {PATH}");
-
                     MSG.SH("Success", $"Unblocked {PATH}");
                 }
                 catch (Exception ex)
@@ -96,6 +132,7 @@ namespace M_Bytes.Core.EngineCL
                 }
             });
         }
+
 
 
         public static Task MemoryClean()
