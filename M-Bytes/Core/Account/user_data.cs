@@ -26,9 +26,9 @@ namespace M_Bytes.Core.Account
 
                 File.WriteAllText(filePath, jsonString);
             }
-            catch (Exception ex)
+            catch
             {
-                MSG.SH("Error", ex.Message);
+                
             }
         }
     }

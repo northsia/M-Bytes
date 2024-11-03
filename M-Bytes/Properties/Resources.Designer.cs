@@ -121,6 +121,15 @@ namespace M_Bytes.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        public static System.IO.UnmanagedMemoryStream Cick {
+            get {
+                return ResourceManager.GetStream("Cick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap CL {
@@ -163,6 +172,16 @@ namespace M_Bytes.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap internet {
+            get {
+                object obj = ResourceManager.GetObject("internet", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap M {
             get {
                 object obj = ResourceManager.GetObject("M", resourceCulture);
@@ -177,6 +196,15 @@ namespace M_Bytes.Properties {
             get {
                 object obj = ResourceManager.GetObject("M2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        public static System.IO.UnmanagedMemoryStream Notify {
+            get {
+                return ResourceManager.GetStream("Notify", resourceCulture);
             }
         }
         

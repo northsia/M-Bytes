@@ -487,6 +487,7 @@
       <DependentUpon>info.cs</DependentUpon>
     </Compile>
     <Compile Include="Core\Messages\MSG.cs" />
+    <Compile Include="Core\Sound\Player.cs" />
     <Compile Include="index.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -496,6 +497,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\WebAPi\Requste.cs" />
+    <None Include="Resources\2024-11-03 20-03-04-VEED.wav" />
+    <None Include="Resources\Cick.wav" />
+    <None Include="Resources\internet.png" />
     <None Include="Resources\settings.png" />
     <None Include="bin\Debug\Fonts\Gotham.otf" />
     <EmbeddedResource Include="Resources\Gotham.otf" />

@@ -18,6 +18,19 @@ namespace M_Bytes.Core.EngineCL
     {
         public static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+
+        public static void OpenUrl(string url)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, $"ENGINE.CL: Error opening URL '{url}'");
+            }
+        }
+
         public static async Task CREAT_RECOVERY_POINT(string description)
         {
             try

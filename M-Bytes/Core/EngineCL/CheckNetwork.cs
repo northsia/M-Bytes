@@ -1,11 +1,7 @@
 ﻿using M_Bytes.Core.Messages;
 using NLog;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,8 +9,6 @@ namespace M_Bytes.Core.EngineCL
 {
     internal class CheckNetwork
     {
-
-
         public static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public static bool IsNetworkAvailable()
@@ -29,7 +23,7 @@ namespace M_Bytes.Core.EngineCL
             }
             catch
             {
-                return false; 
+                return false;
             }
         }
 
@@ -37,18 +31,21 @@ namespace M_Bytes.Core.EngineCL
         {
             if (!IsNetworkAvailable())
             {
-                MSG.SH("Connection Error", "Check Your Network & Try Again.");
+                // Log the error
                 logger.Log(LogLevel.Error, "No Internet Connection.");
+
+                // Show the message and wait for it to be closed
+                MSG.SH("Connection Error", "Check Your Network & Try Again.");
+
+                // Wait for 2 seconds before exiting (if you want to give users time to read the message)
                 await Task.Delay(2000);
 
-                // exit the app if No internet
-
+                // Exit the app
                 Environment.Exit(0);
-
             }
             else
             {
-                
+                // Additional logic for when the network is available (if needed)
             }
         }
     }

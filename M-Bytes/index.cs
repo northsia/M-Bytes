@@ -25,6 +25,8 @@ using M_Bytes.Core.Firebase_data;
 using dotenv.net;
 using Microsoft.Win32;
 using System.Text.Json;
+using System.Diagnostics;
+using M_Bytes.Core.Sound;
 
 namespace M_Bytes
 {
@@ -194,7 +196,7 @@ namespace M_Bytes
 
                 if (KeyAuthApp.response.success)
                 {
-                    MSG.SH("Authentication\nSuccess !", "redirect to panel ...");
+                    MSG.SH("Authentication\nSuccess !", "redirect to panel ...", guna2ToggleSwitch1);
 
                     user_data.Save(KeyAuthApp.user_data.username.ToString());
 
@@ -209,13 +211,17 @@ namespace M_Bytes
                 else
                 {
                     string message = KeyAuthApp.response.message;
-                    MSG.SH("Authentication\nFailed !", message);
+                    MSG.SH("Authentication\nFailed !", message, guna2ToggleSwitch1);
                 }
             }
             catch (Exception ex)
             {
 
-                MSG.SH("Failed !", $"{ex.Message}");
+                MSG.SH("Failed !", $"{ex.Message}", guna2ToggleSwitch1);
+            }
+            finally
+            {
+                guna2CircleProgressBar1.Hide();
             }
         }
 
@@ -332,7 +338,7 @@ namespace M_Bytes
             }
             finally
             {
-                MSG.SH("Done !", "Cleaning Seccess !");
+                MSG.SH("Done !", "Cleaning Seccess !", guna2ToggleSwitch1);
                 circlebar.Visible = false;
             }
         }
@@ -380,14 +386,14 @@ namespace M_Bytes
                 }
                 else if (!guna2CheckBox2.Checked)
                 {
-                    MSG.SH("Nope","You Must Check the Box !");
+                    MSG.SH("Nope","You Must Check the Box !", guna2ToggleSwitch1);
                 }
 
-                MSG.SH("Done !", "Done Remove Duplicate ...");
+                MSG.SH("Done !", "Done Remove Duplicate ...", guna2ToggleSwitch1);  
             }
             catch (Exception ex)
             {
-                MSG.SH("Error", $"An error occurred: {ex.Message}");
+                MSG.SH("Error", $"An error occurred: {ex.Message}", guna2ToggleSwitch1);
             }
             finally
             {
@@ -433,6 +439,8 @@ namespace M_Bytes
 
         private async void guna2Button10_Click(object sender, EventArgs e)
         {
+            this.Text = "M-Bytes";
+
             circlebar.Show();
 
             await Task.Delay(600);
@@ -476,7 +484,7 @@ namespace M_Bytes
             }
             finally
             {
-                MSG.SH("Done !", "Browser Cleaned !");
+                MSG.SH("Done !", "Browser Cleaned !", guna2ToggleSwitch1);
                 circlebar.Visible = false;
             }
 
@@ -542,7 +550,7 @@ namespace M_Bytes
             }
             catch (Exception ex)
             {
-                MSG.SH("Error",ex.Message);
+                MSG.SH("Error",ex.Message, guna2ToggleSwitch1);
             }
             
 
@@ -603,6 +611,8 @@ namespace M_Bytes
         {
             try
             {
+                CheckNetwork.CheckConnection();
+
                 LoadTheLastRecoveryDate();
 
                 SetCPR();
@@ -611,8 +621,6 @@ namespace M_Bytes
 
 
                 EnableDarkMode();
-
-                CheckNetwork.CheckConnection();
 
                 
                 // Set User Remembre
@@ -762,6 +770,27 @@ namespace M_Bytes
         }
 
         private void guna2Button16_Click(object sender, EventArgs e)
+        {
+            settings.BringToFront();
+        }
+
+        private void guna2Button17_Click(object sender, EventArgs e)
+        {
+            EngineCL.OpenUrl("https://meed-mh.online");
+        }
+
+        private void guna2CustomRadioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+
+        private void guna2ToggleSwitch1_CheckedChanged_1(object sender, EventArgs e)
+        {
+            Player.PlayClickSound();
+        }
+
+        private void option_Paint(object sender, PaintEventArgs e)
         {
 
         }
