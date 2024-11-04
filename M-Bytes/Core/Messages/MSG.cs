@@ -16,7 +16,7 @@ namespace M_Bytes.Core.Messages
         {
             if (Switch != null && Switch.Checked)
             {
-                Player.PlayNotify();
+                Player.PlayNotify(Switch);
             }
             else
             {

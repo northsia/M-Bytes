@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -10,6 +11,25 @@ namespace M_Bytes.Core.Firebase_data
         private const string DatabaseURL = "https://m-bytes-default-rtdb.europe-west1.firebasedatabase.app/";
         private const string Secret = "w6Y5GwSBJ8n5ciXVH3eY9plKOd9kQC2uJghSOB7H";
         private static readonly HttpClient httpClient = new HttpClient();
+
+
+        private static async Task AddDataToFirebase(string url, string jsonData)
+        {
+            try
+            {
+                var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await httpClient.PostAsync(url, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // OK
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
 
 
         public static async Task<string> SEND_GET_DATA_(string path)
@@ -25,13 +45,11 @@ namespace M_Bytes.Core.Firebase_data
                 }
                 else
                 {
-                    MessageBox.Show($"Error fetching data: {response.StatusCode}");
                     return null;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show($"Exception: {ex.Message}");
                 return null;
             }
         }

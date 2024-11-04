@@ -329,18 +329,18 @@
             // main
             // 
             this.main.Controls.Add(this.settings);
-            this.main.Controls.Add(this.recovery);
-            this.main.Controls.Add(this.FullCL);
-            this.main.Controls.Add(this.Blocker);
             this.main.Controls.Add(this.option);
-            this.main.Controls.Add(this.Duplicate);
-            this.main.Controls.Add(this.BrowserCL);
             this.main.Controls.Add(this.guna2Button10);
             this.main.Controls.Add(this.circlebar);
             this.main.Controls.Add(this.buttons);
             this.main.Controls.Add(this.label1);
             this.main.Controls.Add(this.pictureBox3);
             this.main.Controls.Add(this.pictureBox2);
+            this.main.Controls.Add(this.BrowserCL);
+            this.main.Controls.Add(this.Duplicate);
+            this.main.Controls.Add(this.recovery);
+            this.main.Controls.Add(this.FullCL);
+            this.main.Controls.Add(this.Blocker);
             this.main.Dock = System.Windows.Forms.DockStyle.Fill;
             this.main.Location = new System.Drawing.Point(0, 0);
             this.main.Name = "main";
@@ -631,7 +631,7 @@
             this.guna2CircleButton3.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.guna2CircleButton3.ForeColor = System.Drawing.Color.White;
             this.guna2CircleButton3.Image = global::M_Bytes.Properties.Resources._0984A68A_569A_4D24_819F_79C70BD65F50_1;
-            this.guna2CircleButton3.Location = new System.Drawing.Point(462, 163);
+            this.guna2CircleButton3.Location = new System.Drawing.Point(463, 128);
             this.guna2CircleButton3.Name = "guna2CircleButton3";
             this.guna2CircleButton3.PressedColor = System.Drawing.Color.Transparent;
             this.guna2CircleButton3.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
@@ -657,7 +657,7 @@
             this.guna2TextBox4.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.guna2TextBox4.ForeColor = System.Drawing.Color.White;
             this.guna2TextBox4.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.guna2TextBox4.Location = new System.Drawing.Point(61, 154);
+            this.guna2TextBox4.Location = new System.Drawing.Point(62, 119);
             this.guna2TextBox4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.guna2TextBox4.Name = "guna2TextBox4";
             this.guna2TextBox4.PasswordChar = '\0';
@@ -676,7 +676,7 @@
             this.guna2HtmlLabel3.BackColor = System.Drawing.Color.Transparent;
             this.guna2HtmlLabel3.Font = new System.Drawing.Font("Gotham", 20F, System.Drawing.FontStyle.Bold);
             this.guna2HtmlLabel3.ForeColor = System.Drawing.Color.White;
-            this.guna2HtmlLabel3.Location = new System.Drawing.Point(77, 88);
+            this.guna2HtmlLabel3.Location = new System.Drawing.Point(82, 52);
             this.guna2HtmlLabel3.Name = "guna2HtmlLabel3";
             this.guna2HtmlLabel3.Size = new System.Drawing.Size(212, 38);
             this.guna2HtmlLabel3.TabIndex = 17;

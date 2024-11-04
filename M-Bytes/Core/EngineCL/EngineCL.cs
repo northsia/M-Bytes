@@ -55,11 +55,10 @@ namespace M_Bytes.Core.EngineCL
                     }
                 });
 
-                Console.WriteLine("Recovery point created successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error creating recovery point: {ex.Message}");
+                logger.Error($"Error creating recovery point: {ex.Message}");
             }
         }
 

@@ -5,6 +5,7 @@ using M_Bytes.Core.EngineCL;
 using M_Bytes.Core.Messages;
 using Microsoft.Win32.SafeHandles;
 using System;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.Drawing.Text;
 using System.ComponentModel;
@@ -24,7 +25,6 @@ using IdentityModel.OidcClient;
 using M_Bytes.Core.Firebase_data;
 using dotenv.net;
 using Microsoft.Win32;
-using System.Text.Json;
 using System.Diagnostics;
 using M_Bytes.Core.Sound;
 
@@ -196,6 +196,9 @@ namespace M_Bytes
 
                 if (KeyAuthApp.response.success)
                 {
+
+                    ProtecterEngine.SESSION_LGN = 1;
+
                     MSG.SH("Authentication\nSuccess !", "redirect to panel ...", guna2ToggleSwitch1);
 
                     user_data.Save(KeyAuthApp.user_data.username.ToString());
@@ -210,12 +213,16 @@ namespace M_Bytes
                 }
                 else
                 {
+                    ProtecterEngine.SESSION_LGN = 0;
+
                     string message = KeyAuthApp.response.message;
+
                     MSG.SH("Authentication\nFailed !", message, guna2ToggleSwitch1);
                 }
             }
             catch (Exception ex)
             {
+                ProtecterEngine.SESSION_LGN = 0;
 
                 MSG.SH("Failed !", $"{ex.Message}", guna2ToggleSwitch1);
             }
@@ -261,6 +268,9 @@ namespace M_Bytes
 
         private void guna2Button3_Click(object sender, EventArgs e)
         {
+
+            ProtecterEngine.PROTECTER_ENGINE_PROTECT_();
+
             if (option.Visible == false)
             {
                 option.Visible = true;
@@ -288,6 +298,7 @@ namespace M_Bytes
 
         private void guna2Button4_Click(object sender, EventArgs e)
         {
+            ProtecterEngine.PROTECTER_ENGINE_PROTECT_();
             FullCL.BringToFront();
 
         }
@@ -306,6 +317,8 @@ namespace M_Bytes
         {
             try
             {
+                ProtecterEngine.PROTECTER_ENGINE_PROTECT_();
+
                 circlebar.Visible = true;
 
                 if (guna2CheckBox3.Checked)
@@ -338,6 +351,8 @@ namespace M_Bytes
             }
             finally
             {
+                await Task.Delay(5000);
+
                 MSG.SH("Done !", "Cleaning Seccess !", guna2ToggleSwitch1);
                 circlebar.Visible = false;
             }
@@ -371,6 +386,7 @@ namespace M_Bytes
 
         private void guna2Button5_Click_1(object sender, EventArgs e)
         {
+            ProtecterEngine.PROTECTER_ENGINE_PROTECT_();
             Duplicate.BringToFront();
         }
 
@@ -378,6 +394,8 @@ namespace M_Bytes
         {
             try
             {
+                ProtecterEngine.PROTECTER_ENGINE_PROTECT_();
+
                 circlebar.Show();
 
                 if (guna2CheckBox2.Checked && !string.IsNullOrWhiteSpace(guna2TextBox3.Text))
@@ -389,14 +407,17 @@ namespace M_Bytes
                     MSG.SH("Nope","You Must Check the Box !", guna2ToggleSwitch1);
                 }
 
-                MSG.SH("Done !", "Done Remove Duplicate ...", guna2ToggleSwitch1);  
             }
             catch (Exception ex)
             {
-                MSG.SH("Error", $"An error occurred: {ex.Message}", guna2ToggleSwitch1);
+                logger.Error(ex);
             }
             finally
             {
+                await Task.Delay(5000);
+
+                MSG.SH("Done !", "Done Remove Duplicate ...", guna2ToggleSwitch1);
+
                 circlebar.Hide();
             }
         }
@@ -415,6 +436,8 @@ namespace M_Bytes
 
         private void guna2CircleButton2_Click(object sender, EventArgs e)
         {
+            ProtecterEngine.PROTECTER_ENGINE_PROTECT_();
+
             if (guna2CheckBox2.Checked) 
             {
                 FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
@@ -453,6 +476,7 @@ namespace M_Bytes
 
         private void guna2Button6_Click(object sender, EventArgs e)
         {
+            ProtecterEngine.PROTECTER_ENGINE_PROTECT_();
             BrowserCL.BringToFront();
         }
 
@@ -460,6 +484,8 @@ namespace M_Bytes
         {
             try
             {
+                ProtecterEngine.PROTECTER_ENGINE_PROTECT_();
+
                 circlebar.Visible = true;
 
                 if (guna2CheckBox3.Checked)
@@ -484,6 +510,8 @@ namespace M_Bytes
             }
             finally
             {
+                await Task.Delay(5000);
+
                 MSG.SH("Done !", "Browser Cleaned !", guna2ToggleSwitch1);
                 circlebar.Visible = false;
             }
@@ -517,11 +545,14 @@ namespace M_Bytes
 
         private void guna2Button7_Click(object sender, EventArgs e)
         {
+            ProtecterEngine.PROTECTER_ENGINE_PROTECT_();
             Blocker.BringToFront();
         }
 
         private void guna2CircleButton3_Click(object sender, EventArgs e)
         {
+
+            ProtecterEngine.PROTECTER_ENGINE_PROTECT_();
             FileDialog fileDialog = new OpenFileDialog();
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -535,35 +566,63 @@ namespace M_Bytes
 
         }
 
-        private void guna2Button12_Click(object sender, EventArgs e)
+        private async void guna2Button12_Click(object sender, EventArgs e)
         {
             try
             {
+
+
+                ProtecterEngine.PROTECTER_ENGINE_PROTECT_();
+
+                circlebar.Show();
+                
                 string filePath = guna2TextBox4.Text;
 
                 MessageBox.Show(filePath);
 
                 if (File.Exists(filePath))
                 {
-                    Task.Run(() => EngineCL.BLOCK_FIREWALL_APP(filePath));
+                    await Task.Run(() => EngineCL.BLOCK_FIREWALL_APP(filePath));
                 }
             }
             catch (Exception ex)
             {
                 MSG.SH("Error",ex.Message, guna2ToggleSwitch1);
             }
-            
+            finally
+            {
+
+                await Task.Delay(5000);
+                
+                circlebar.Hide();
+
+            }
+
 
         }
 
         private async void guna2Button13_Click(object sender, EventArgs e)
         {
-            string filePath = guna2TextBox4.Text;
-
-            if (File.Exists(filePath))
+            try
             {
-                await Task.Run(() => EngineCL.UNBLOCK_FIREWALL_APP(filePath));
+                ProtecterEngine.PROTECTER_ENGINE_PROTECT_();
+
+                circlebar.Show();
+
+                string filePath = guna2TextBox4.Text;
+
+                if (File.Exists(filePath))
+                {
+                    await Task.Run(() => EngineCL.UNBLOCK_FIREWALL_APP(filePath));
+                }
             }
+            finally
+            {
+                await Task.Delay(5000);
+
+                circlebar.Hide();
+            }
+            
         }
 
         private void guna2HtmlLabel3_Click_1(object sender, EventArgs e)
@@ -611,9 +670,13 @@ namespace M_Bytes
         {
             try
             {
+                ProtecterEngine.PROTECTER_ENGINE_PROTECT_ONLOAD_();
+
                 CheckNetwork.CheckConnection();
 
                 LoadTheLastRecoveryDate();
+
+                CheckIfNotificationsEnabled();
 
                 SetCPR();
 
@@ -631,9 +694,13 @@ namespace M_Bytes
                 LoadLabelFont();
 
                 logger.Info("Started M-Bytes");
+
                 logger.Info("Starting Core.EngineCl ...");
+
                 await Task.Delay(2000);
+
                 logger.Info($"{nameof(index_Load)} Started");
+
                 logger.Info("Core.EngineCL Started [+]");
 
             }
@@ -704,6 +771,8 @@ namespace M_Bytes
         {
             circlebar.Show();
 
+            ProtecterEngine.PROTECTER_ENGINE_PROTECT_();
+
             string discrp = guna2TextBox5.Text; 
             string recovery_date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
@@ -740,6 +809,8 @@ namespace M_Bytes
             }
             finally
             {
+                await Task.Delay(5000);
+
                 circlebar.Hide();
             }
         }
@@ -761,6 +832,7 @@ namespace M_Bytes
 
         private void guna2Button14_Click(object sender, EventArgs e)
         {
+            ProtecterEngine.PROTECTER_ENGINE_PROTECT_();
             recovery.BringToFront();
         }
 
@@ -787,8 +859,78 @@ namespace M_Bytes
 
         private void guna2ToggleSwitch1_CheckedChanged_1(object sender, EventArgs e)
         {
-            Player.PlayClickSound();
+            Player.PlayClickSound(guna2ToggleSwitch1);
+
+
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "settings", "settings.json");
+
+
+            if (guna2ToggleSwitch1.Checked)
+            {
+                var settings = new Dictionary<string, bool>
+                {
+                    { "NotificationsEnabled", true },
+                };
+
+
+                CreateJsonData(path, settings); 
+            }
+            else
+            {
+                var settings = new Dictionary<string, bool>
+                {
+                    { "NotificationsEnabled", false },
+                };
+
+
+                CreateJsonData(path, settings);
+            }
+
+
+
+
+
+            
         }
+
+        public static void CreateJsonData<T>(string filePath, T data)
+        {
+            try
+            {
+                string jsonData = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
+
+                File.WriteAllText(filePath, jsonData);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error while creating JSON data: {ex.Message}");
+            }
+        }
+
+
+            private void CheckIfNotificationsEnabled()
+            {
+            string settingsDirectory = "settings"; 
+            string settingsFilePath = Path.Combine(settingsDirectory, "settings.json"); // Path to the settings.json file
+
+            if (File.Exists(settingsFilePath))
+            {
+                string json = File.ReadAllText(settingsFilePath);
+
+                var settings = JsonSerializer.Deserialize<Dictionary<string, bool>>(json);
+
+                if (settings != null && settings.TryGetValue("NotificationsEnabled", out bool isEnabled))
+                {
+                    guna2ToggleSwitch1.Checked = isEnabled;
+                }
+            }
+            else
+            {
+                guna2ToggleSwitch1.Checked = false;
+            }
+        }
+
+
 
         private void option_Paint(object sender, PaintEventArgs e)
         {

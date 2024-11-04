@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Guna.UI2.WinForms;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Media;
@@ -9,16 +10,23 @@ namespace M_Bytes.Core.Sound
 {
     internal class Player
     {
-        public static void PlayClickSound()
+        public static void PlayClickSound(Guna2ToggleSwitch SW)
         {
-            SoundPlayer player = new SoundPlayer(Properties.Resources.Cick);
-            player.Play();
+            if (SW.Checked)
+            {
+                SoundPlayer player = new SoundPlayer(Properties.Resources.Cick);
+                player.Play();
+            }
+            
         }
 
-        public static void PlayNotify()
+        public static void PlayNotify(Guna2ToggleSwitch SW)
         {
-            SoundPlayer player = new SoundPlayer(Properties.Resources.Notify);
-            player.Play();
+            if (SW.Checked)
+            {
+                SoundPlayer player = new SoundPlayer(Properties.Resources.Cick);
+                player.Play();
+            }            
         }
     }
 }
