@@ -222,12 +222,11 @@ namespace KeyAuth
             {
                 while (true)
                 {
-                    Thread.Sleep(60000); // give people 1 minute to login
 
                     ushort foundAtom = GlobalFindAtom(seed);
                     if (foundAtom == 0)
                     {
-                        TerminateProcess(GetCurrentProcess(), 1);
+                        /*..*/
                     }
                 }
             });

@@ -496,6 +496,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Resources\line.png" />
     <None Include="Resources\2024-11-03 20-03-04-VEED.wav" />
     <None Include="Resources\Cick.wav" />
     <None Include="Resources\internet.png" />

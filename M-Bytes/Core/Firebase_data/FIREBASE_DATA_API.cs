@@ -13,24 +13,6 @@ namespace M_Bytes.Core.Firebase_data
         private static readonly HttpClient httpClient = new HttpClient();
 
 
-        private static async Task AddDataToFirebase(string url, string jsonData)
-        {
-            try
-            {
-                var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-
-                HttpResponseMessage response = await httpClient.PostAsync(url, content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    // OK
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
-
 
         public static async Task<string> SEND_GET_DATA_(string path)
         {

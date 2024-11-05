@@ -185,6 +185,9 @@ namespace M_Bytes
         {
             try
             {
+
+                LoadUserlabel();
+
                 guna2CircleProgressBar1.Show();
 
                 await Task.Delay(1000);
@@ -202,7 +205,7 @@ namespace M_Bytes
                     MSG.SH("Authentication\nSuccess !", "redirect to panel ...", guna2ToggleSwitch1);
 
                     user_data.Save(KeyAuthApp.user_data.username.ToString());
-
+                   
                     // set UserName Profile
 
                     label1.Text = KeyAuthApp.user_data.username.ToString();
@@ -666,11 +669,36 @@ namespace M_Bytes
             }
         }
 
+
+        private void LoadUserlabel()
+        {
+            try
+            {
+                user = KeyAuthApp.user_data.username;
+
+                if (user != null)
+                {
+                    guna2HtmlLabel10.Text = $"Hello {user}!";
+
+                }
+                else
+                {
+                    guna2HtmlLabel10.Text = $"Hello {guna2TextBox1.Text} !";
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+            
+        }
+
+
+
         private async void index_Load(object sender, EventArgs e)
         {
             try
             {
-                ProtecterEngine.PROTECTER_ENGINE_PROTECT_ONLOAD_();
 
                 CheckNetwork.CheckConnection();
 
@@ -722,28 +750,22 @@ namespace M_Bytes
         {
             try
             {
-                // Define the path to the JSON file
                 string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "user_data", "last_Recovery_date.json");
 
-                // Check if the file exists
                 if (File.Exists(filePath))
                 {
-                    // Read the JSON data from the file
                     string jsonData = File.ReadAllText(filePath);
 
-                    // Deserialize the JSON data to an anonymous object
                     var recoveryData = JsonSerializer.Deserialize<RecoveryData>(jsonData);
 
                     if (recoveryData != null)
                     {
-                        // Access the properties from the recovery data
                         string description = recoveryData.Description;
                         string date = recoveryData.Date;
 
 
                         guna2TextBox6.Text = date;
 
-                        // Log or display the recovery data as needed
                         logger.Info($"Last Recovery Description: {description}");
                         logger.Info($"Last Recovery Date: {date}");
                     }
@@ -759,7 +781,6 @@ namespace M_Bytes
             }
         }
 
-        // Define a class to match the structure of the JSON data
         public class RecoveryData
         {
             public string Description { get; set; }
@@ -885,12 +906,6 @@ namespace M_Bytes
 
                 CreateJsonData(path, settings);
             }
-
-
-
-
-
-            
         }
 
         public static void CreateJsonData<T>(string filePath, T data)
@@ -935,6 +950,21 @@ namespace M_Bytes
         private void option_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void guna2HtmlLabel10_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2HtmlLabel10_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void guna2Button2_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }
