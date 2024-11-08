@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -20,6 +19,10 @@ namespace M_Bytes
 
         [DllImport("gdi32.dll")]
         private static extern bool RemoveFontResource(string lpFileName);
+
+        [DllImport("gdi32.dll")]
+        private static extern int GetFontResourceInfo(string lpFileName, IntPtr lpBuffer, uint nBufferSize);
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -28,16 +31,23 @@ namespace M_Bytes
         {
             string path = Path.Combine(Environment.CurrentDirectory, "Fonts/Gotham.otf");
 
-            int result = AddFontResource(path);
-
-            if (result > 0)
+            // Check if the font is already loaded
+            if (!IsFontLoaded(path))
             {
-                // OK 
+                int result = AddFontResource(path);
+
+                if (result > 0)
+                {
+                    // Font successfully loaded
+                }
+                else
+                {
+                    Environment.Exit(0);
+                }
             }
             else
             {
-                MessageBox.Show("Failed to load font" + result, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Environment.Exit(0);
+                    // Font is already loaded//
             }
 
             if (Environment.OSVersion.Version.Major >= 6)
@@ -45,12 +55,24 @@ namespace M_Bytes
                 SetProcessDPIAware();
             }
 
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new index());
         }
 
+        private static bool IsFontLoaded(string fontPath)
+        {
+            try
+            {
+                // Attempt to create a font object using the font file
+                var font = new System.Drawing.Font(fontPath, 10);
+                return font.Name != null;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern bool SetProcessDPIAware();

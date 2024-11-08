@@ -70,8 +70,6 @@ namespace M_Bytes
 
                 InitializeComponent();
 
-                LoadCustomFont("Fonts/Gotham.otf");
-
             }
             catch (Exception ex)
             {
@@ -129,32 +127,6 @@ namespace M_Bytes
             }
         }
 
-
-
-
-        private void LoadCustomFont(string fontPath)
-        {
-            if (!System.IO.File.Exists(fontPath))
-            {
-                MessageBox.Show("Font file not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            IntPtr fontPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(byte)) * 1024);
-            try
-            {
-                customFonts.AddFontFile(fontPath);
-                Font customFont = new Font(customFonts.Families[0], 12, FontStyle.Regular);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error loading font: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                Marshal.FreeCoTaskMem(fontPtr);
-            }
-        }
 
         private void guna2HtmlLabel1_Click(object sender, EventArgs e)
         {
@@ -581,7 +553,6 @@ namespace M_Bytes
                 
                 string filePath = guna2TextBox4.Text;
 
-                MessageBox.Show(filePath);
 
                 if (File.Exists(filePath))
                 {
