@@ -10,6 +10,20 @@ namespace M_Bytes.Core.EngineCL
         /// <summary>
         /// Form Load Functions
         /// </summary>
+        /// 
+
+        public static void CreateFileIM()
+        {
+            string Current = Environment.CurrentDirectory;
+
+            string path = Path.Combine(Current, "Settings");
+
+            if (!File.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+        }
+
         public static void CheckUser(Guna2TextBox textBox) 
         {
             string currentDir = Environment.CurrentDirectory;

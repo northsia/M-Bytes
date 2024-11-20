@@ -1,6 +1,8 @@
 ﻿using Guna.UI2.WinForms;
+using M_Bytes.Core.Settings;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Media;
 using System.Text;
@@ -10,23 +12,23 @@ namespace M_Bytes.Core.Sound
 {
     internal class Player
     {
-        public static void PlayClickSound(Guna2ToggleSwitch SW)
+        public static void PlayClickSound()
         {
-            if (SW.Checked)
-            {
                 SoundPlayer player = new SoundPlayer(Properties.Resources.Cick);
                 player.Play();
-            }
-            
         }
 
-        public static void PlayNotify(Guna2ToggleSwitch SW)
+        public static void PlayNotify()
         {
-            if (SW.Checked)
+            string path = Environment.CurrentDirectory + "/Settings/settings.json";
+
+            bool Player = Json.GET_TRUE_F_CONTENT_FROM_JSON_(path, "NotificationsEnabled");
+
+            if (Player)
             {
-                SoundPlayer player = new SoundPlayer(Properties.Resources.Cick);
+                SoundPlayer player = new SoundPlayer(Properties.Resources.Notify);
                 player.Play();
-            }            
+            }
         }
     }
 }

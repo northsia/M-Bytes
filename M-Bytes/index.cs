@@ -673,6 +673,8 @@ namespace M_Bytes
 
                 CheckNetwork.CheckConnection();
 
+                StartUPLoad.CreateFileIM();
+
                 LoadTheLastRecoveryDate();
 
                 CheckIfNotificationsEnabled();
@@ -851,7 +853,7 @@ namespace M_Bytes
 
         private void guna2ToggleSwitch1_CheckedChanged_1(object sender, EventArgs e)
         {
-            Player.PlayClickSound(guna2ToggleSwitch1);
+            Player.PlayClickSound();
 
 
             var path = Path.Combine(Directory.GetCurrentDirectory(), "settings", "settings.json");

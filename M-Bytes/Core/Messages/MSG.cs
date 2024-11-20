@@ -16,11 +16,7 @@ namespace M_Bytes.Core.Messages
         {
             if (Switch != null && Switch.Checked)
             {
-                Player.PlayNotify(Switch);
-            }
-            else
-            {
-                // Add any other actions needed when the switch is off or when it's null
+                Player.PlayNotify();
             }
 
             info info = new info();

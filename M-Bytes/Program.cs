@@ -1,58 +1,37 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 
 namespace M_Bytes
 {
     internal static class Program
     {
-        /// <summary>
-        /// Load The Font
-        /// </summary>
-        /// <param name="lpFileName"></param>
-        /// <returns></returns>
-        [DllImport("gdi32.dll")]
-        private static extern int AddFontResource(string lpFileName);
+        // Add font to system with AddFontResourceEx
+        [DllImport("gdi32.dll", SetLastError = true)]
+        private static extern int AddFontResourceEx(string lpszFilename, uint fl, IntPtr pdv);
 
-        [DllImport("gdi32.dll")]
-        private static extern bool RemoveFontResource(string lpFileName);
+        // Remove font from system
+        [DllImport("gdi32.dll", SetLastError = true)]
+        private static extern bool RemoveFontResourceEx(string lpszFilename, uint fl, IntPtr pdv);
 
-        [DllImport("gdi32.dll")]
-        private static extern int GetFontResourceInfo(string lpFileName, IntPtr lpBuffer, uint nBufferSize);
+        private const uint FR_PRIVATE = 0x10;  // Private font not added to system list
+        private const uint FR_NOT_ENUM = 0x20; // Prevent font from being enumerated
 
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {
-            string path = Path.Combine(Environment.CurrentDirectory, "Fonts/Gotham.otf");
+            string fontPath = Path.Combine(Environment.CurrentDirectory, "font", "Gotham.otf");
 
-            // Check if the font is already loaded
-            if (!IsFontLoaded(path))
+            if (!File.Exists(fontPath))
             {
-                int result = AddFontResource(path);
-
-                if (result > 0)
-                {
-                    // Font successfully loaded
-                }
-                else
-                {
-                    Environment.Exit(0);
-                }
-            }
-            else
-            {
-                    // Font is already loaded//
+                MessageBox.Show("Font file not found.");
+                Environment.Exit(0);
             }
 
-            if (Environment.OSVersion.Version.Major >= 6)
+            if (!InstallFont(fontPath))
             {
-                SetProcessDPIAware();
+                Environment.Exit(0);
             }
 
             Application.EnableVisualStyles();
@@ -60,21 +39,17 @@ namespace M_Bytes
             Application.Run(new index());
         }
 
-        private static bool IsFontLoaded(string fontPath)
+        private static bool InstallFont(string fontPath)
         {
-            try
-            {
-                // Attempt to create a font object using the font file
-                var font = new System.Drawing.Font(fontPath, 10);
-                return font.Name != null;
-            }
-            catch
-            {
-                return false;
-            }
+            // Add font to system font collection
+            int result = AddFontResourceEx(fontPath, FR_NOT_ENUM, IntPtr.Zero);
+            return result > 0; // If successful, result > 0
         }
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        private static extern bool SetProcessDPIAware();
+        private static bool UninstallFont(string fontPath)
+        {
+            // Remove font from system font collection
+            return RemoveFontResourceEx(fontPath, FR_NOT_ENUM, IntPtr.Zero);
+        }
     }
 }

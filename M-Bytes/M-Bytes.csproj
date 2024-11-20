@@ -487,6 +487,7 @@
       <DependentUpon>info.cs</DependentUpon>
     </Compile>
     <Compile Include="Core\Messages\MSG.cs" />
+    <Compile Include="Core\Settings\Json.cs" />
     <Compile Include="Core\Sound\Player.cs" />
     <Compile Include="index.cs">
       <SubType>Form</SubType>
