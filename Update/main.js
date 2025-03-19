@@ -7,8 +7,8 @@ function createWindow() {
     height: 400,
     frame: false,
     webPreferences: {
-      nodeIntegration: true,  // Enable Node.js in renderer process
-      contextIsolation: false,  // Disable context isolation to allow access to Node.js APIs
+      nodeIntegration: true,  
+      contextIsolation: false,  
     }
   });
 
