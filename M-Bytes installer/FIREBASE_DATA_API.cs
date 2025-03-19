@@ -8,8 +8,8 @@ namespace M_Bytes_installer
 {
     internal class FIREBASE_DATA_API
     {
-        private const string DatabaseURL = "https://m-bytes-default-rtdb.europe-west1.firebasedatabase.app/";
-        private const string Secret = "w6Y5GwSBJ8n5ciXVH3eY9plKOd9kQC2uJghSOB7H";
+        private const string DatabaseURL = "FIREBASE_API";
+        private const string Secret = "SECRET";
         private static readonly HttpClient httpClient = new HttpClient();
 
 
