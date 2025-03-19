@@ -57,7 +57,7 @@ namespace M_Bytes
         
         public static api KeyAuthApp = new api(
             name: "M-Bytes", // App name - VaultCord.com FREE Discord backup bot for members & your entire server saved from terms and nukes!
-            ownerid: "4Mgrdto854", // Account ID
+            ownerid: "SECRET", // Account ID
             version: "1.0" // Application version. Used for automatic downloads see video here https://www.youtube.com/watch?v=kW195PLCBKs
         );
 
@@ -842,7 +842,7 @@ namespace M_Bytes
 
         private void guna2Button17_Click(object sender, EventArgs e)
         {
-            EngineCL.OpenUrl("https://meed-mh.online");
+            EngineCL.OpenUrl("https://ex.com");
         }
 
         private void guna2CustomRadioButton1_CheckedChanged(object sender, EventArgs e)
