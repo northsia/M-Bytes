@@ -1,5 +1,5 @@
 ﻿#include "crow_all.h"
-#include <windows.h>  // لاستخراج معلومات الإصدار
+#include <windows.h> 
 #include "direct.h"
 #include <iostream>
 #include <string>
@@ -8,7 +8,6 @@
 
 using namespace std;
 
-// دالة لتحويل std::string إلى LPCWSTR باستخدام MultiByteToWideChar
 wstring stringToWString(const string& str) {
     int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), (int)str.size(), NULL, 0);
     wstring wstr(size_needed, 0);
@@ -17,30 +16,27 @@ wstring stringToWString(const string& str) {
 }
 
 string EXTRACT_APP_VER(const string& app_path) {
-    wstring wAppPath = stringToWString(app_path); // تحويل المسار إلى LPCWSTR
+    wstring wAppPath = stringToWString(app_path);
 
     DWORD dummy;
     DWORD size = GetFileVersionInfoSize(wAppPath.c_str(), &dummy);  // استخدام LPCWSTR
 
     if (size == 0) {
-        return "";  // إذا فشلنا في الحصول على حجم البيانات
+        return "";  
     }
 
-    // تخصيص الذاكرة
     vector<BYTE> buffer(size);
 
     if (!GetFileVersionInfo(wAppPath.c_str(), 0, size, buffer.data())) {
-        return "";  // إذا فشلنا في استخراج المعلومات
+        return "";  
     }
 
-    // استخراج بيانات الإصدار
     VS_FIXEDFILEINFO* fileInfo;
     UINT fileInfoSize;
     if (!VerQueryValue(buffer.data(), L"\\", (LPVOID*)&fileInfo, &fileInfoSize)) {
-        return "";  // إذا فشلنا في استخراج البيانات
+        return "";  
     }
 
-    // الحصول على الإصدار بصيغة "major.minor.build.revision"
     string version = to_string(HIWORD(fileInfo->dwFileVersionMS)) + "." +
         to_string(LOWORD(fileInfo->dwFileVersionMS)) + "." +
         to_string(HIWORD(fileInfo->dwFileVersionLS)) + "." +
