@@ -19,7 +19,7 @@ string EXTRACT_APP_VER(const string& app_path) {
     wstring wAppPath = stringToWString(app_path);
 
     DWORD dummy;
-    DWORD size = GetFileVersionInfoSize(wAppPath.c_str(), &dummy);  // استخدام LPCWSTR
+    DWORD size = GetFileVersionInfoSize(wAppPath.c_str(), &dummy);  // LPCWSTR
 
     if (size == 0) {
         return "";  
@@ -62,8 +62,9 @@ int main() {
     CROW_ROUTE(app, "/api/v1.0/update")([]() {
         string currentPathStr = CURR_DIR();
 
+        // .Exe Path Replace 
         string appPath = currentPathStr + "/M-Bytes.exe";
-        string appVersion = EXTRACT_APP_VER("C:\\Users\\Meed\\Desktop\\M-Bytes\\M-Bytes\\bin\\Debug\\M-Bytes.exe");
+        string appVersion = EXTRACT_APP_VER("M-Bytes\\M-Bytes\\bin\\Debug\\M-Bytes.exe");
 
         if (!appVersion.empty()) {
             return crow::response(200, "{\"Version\": \"" + appVersion + "\"}");
